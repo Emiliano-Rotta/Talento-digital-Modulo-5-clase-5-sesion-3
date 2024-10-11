@@ -62,10 +62,12 @@ INSERT INTO prestamo (id_libro, fecha_prestamo, devuelto)
 VALUES (1, '2024-10-07', FALSE);
 
 
-
+----------------------------------------------------------------------------------------------------
 -- Ejercicio 2: Base de Datos de "Cine"
 -- Crea una base de datos llamada cine.
+CREATE DATABASE cine;
 -- Conéctate a la base de datos cine.
+\c cine;
 
 -- Crea 3 tablas:
 -- Tabla pelicula: registra las películas disponibles.
@@ -78,22 +80,51 @@ VALUES (1, '2024-10-07', FALSE);
 -- nombre: un texto con máximo 20 caracteres.
 -- duracion_minutos: un número entero, no nulo.
 -- fecha_estreno: fecha de estreno de la película, por defecto la fecha actual.
+CREATE TABLE pelicula (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL,
+    duracion_minutos INT NOT NULL,
+    fecha_estreno DATE DEFAULT CURRENT_DATE
+);
+INSERT INTO pelicula (nombre, duracion_minutos, fecha_estreno)
+VALUES ('Inception', 148, '2010-07-16');
+
 
 -- En la tabla director:
 -- nombre: un texto con máximo 20 caracteres.
 -- pais: un texto que no puede repetirse. (unique)
 -- fecha_nacimiento: la fecha de nacimiento del director, no nula.
+CREATE TABLE director (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL,
+    pais VARCHAR(50) UNIQUE,
+    fecha_nacimiento DATE NOT NULL
+);
+INSERT INTO director (nombre, pais, fecha_nacimiento)
+VALUES ('Christopher Nolan', 'Inglesa', '1970-07-30');
+
 
 -- En la tabla sesion:
 -- id_pelicula: un número que representa la película que se proyecta.
 -- hora_inicio: la fecha y hora de inicio de la sesión, no nula.
 -- en_cartelera: un valor booleano que indica si la película sigue en cartelera, por defecto true.
+CREATE TABLE sesion (
+    id SERIAL PRIMARY KEY,
+    id_pelicula INT NOT NULL,
+    hora_inicio TIMESTAMP NOT NULL,
+    en_cartelera BOOLEAN DEFAULT TRUE
+);
+INSERT INTO sesion (id_pelicula, hora_inicio, en_cartelera)
+VALUES (1, '2024-10-10 18:00:00', TRUE);
 
 
-
+----------------------------------------------------------------------------------------------
 -- Ejercicio 3: Base de Datos de "Tienda Online"
 -- Crea una base de datos llamada tienda_online.
+CREATE DATABASE tienda_online;
+
 -- Conéctate a la base de datos tienda_online.
+\c tienda_online;
 
 -- Crea 3 tablas:
 -- Tabla producto: almacena los productos a la venta.
@@ -103,25 +134,52 @@ VALUES (1, '2024-10-07', FALSE);
 -- Instrucciones Específicas:
 -- En la tabla producto:
 -- nombre: un texto con máximo 30 caracteres.
--- precio: un número decimal que representa el precio del producto, no nulo.(investigue en google como se hace para poner un numero decimal)
+-- precio: un número decimal que representa el precio del producto, no nulo.
 -- fecha_ingreso: la fecha en la que se añadió el producto, por defecto la fecha actual.
+CREATE TABLE producto (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    fecha_ingreso DATE DEFAULT CURRENT_DATE
+);
+INSERT INTO producto (nombre, precio, fecha_ingreso)
+VALUES ('Laptop', 999.99, '2024-10-01');
 
 -- En la tabla cliente:
 -- nombre: un texto con máximo 20 caracteres.
 -- email: un texto que no puede repetirse.
 -- fecha_registro: la fecha en la que el cliente se registró, no nula.
+CREATE TABLE cliente (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL,
+    email VARCHAR(50) UNIQUE,
+    fecha_registro DATE NOT NULL
+);
+INSERT INTO cliente (nombre, email, fecha_registro)
+VALUES ('Juan Pérez', 'juan.perez@mail.com', '2024-10-07');
 
 -- En la tabla orden:
 -- id_cliente: un número que identifica al cliente que realizó la orden.
 -- fecha_orden: la fecha en que se realizó la orden, por defecto la fecha actual.
 -- enviada: un valor booleano que indica si la orden fue enviada, por defecto false.
+CREATE TABLE orden (
+    id SERIAL PRIMARY KEY,
+    id_cliente INT NOT NULL,
+    fecha_orden DATE DEFAULT CURRENT_DATE,
+    enviada BOOLEAN DEFAULT FALSE
+);
+INSERT INTO orden (id_cliente, fecha_orden, enviada)
+VALUES (1, '2024-10-07', FALSE);
 
-
+--------------------------------------------------------------------------------------------
 
 
 -- Ejercicio 4: Base de Datos de "Escuela"
 -- Crea una base de datos llamada escuela.
+CREATE DATABASE escuela;
+
 -- Conéctate a la base de datos escuela.
+\c escuela;
 
 -- Crea 3 tablas:
 -- Tabla curso: almacena los cursos disponibles.
@@ -134,13 +192,39 @@ VALUES (1, '2024-10-07', FALSE);
 -- nombre: un texto con máximo 20 caracteres.
 -- creditos: un número entero que representa los créditos del curso, no nulo.
 -- fecha_creacion: fecha en la que se creó el curso, por defecto la fecha actual.
+CREATE TABLE curso (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL,
+    creditos INT NOT NULL,
+    fecha_creacion DATE DEFAULT CURRENT_DATE
+);
+INSERT INTO curso (nombre, creditos, fecha_creacion)
+VALUES ('Matemáticas', 4, '2024-09-01');
+
 
 -- En la tabla estudiante:
 -- nombre: un texto con máximo 20 caracteres.
 -- numero_identificacion: un número que no puede repetirse.
 -- fecha_nacimiento: la fecha de nacimiento del estudiante, no nula.
+CREATE TABLE estudiante (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL,
+    numero_identificacion INT UNIQUE,
+    fecha_nacimiento DATE NOT NULL
+);
+INSERT INTO estudiante (nombre, numero_identificacion, fecha_nacimiento)
+VALUES ('María González', 12345678, '2005-03-15');
 
 -- En la tabla matricula:
 -- id_estudiante: un número que identifica al estudiante que realizó la matrícula.
 -- fecha_matricula: la fecha en que se realizó la matrícula, por defecto la fecha actual.
 -- estado: un valor booleano que indica si la matrícula está activa, por defecto true.
+CREATE TABLE matricula (
+    id SERIAL PRIMARY KEY,
+    id_estudiante INT NOT NULL,
+    fecha_matricula DATE DEFAULT CURRENT_DATE,
+    estado BOOLEAN DEFAULT TRUE
+);
+INSERT INTO matricula (id_estudiante, fecha_matricula, estado)
+VALUES (1, '2024-10-07', TRUE);
+
