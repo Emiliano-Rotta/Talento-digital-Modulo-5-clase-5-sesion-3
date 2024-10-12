@@ -281,6 +281,37 @@ CREATE TABLE doctores_citas (
 -- Cada estudiante tiene un único tutor académico(tabla profesores), y cada tutor puede estar asignado a varios estudiantes.
 
 -- Tablas a crear: estudiantes, profesores, cursos, y una tabla intermedia para la relación entre estudiantes y cursos.
+CREATE TABLE profesores (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20),
+    departamento VARCHAR(30)
+);
+
+
+CREATE TABLE estudiantes (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20),
+    edad INT,
+    id_tutor INT,
+    FOREIGN KEY (id_tutor) REFERENCES profesores(id)
+);
+
+CREATE TABLE cursos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100),
+    creditos INT,
+    id_profesor INT,
+    FOREIGN KEY (id_profesor) REFERENCES profesores(id)
+);
+
+--tabla intermedia estudiantes cursos
+CREATE TABLE estudiantes_cursos (
+    id_estudiante INT,
+    id_curso INT,
+    PRIMARY KEY (id_estudiante, id_curso),
+    FOREIGN KEY (id_estudiante) REFERENCES estudiantes(id),
+    FOREIGN KEY (id_curso) REFERENCES cursos(id)
+);
 
 
 ---------------------------------------------------------------------------------------------
@@ -293,3 +324,46 @@ CREATE TABLE doctores_citas (
 -- Un usuario puede pedir prestados varios libros, pero un préstamo pertenece solo a un libro y a un usuario.
 
 -- Tablas a crear: libros, categorías, autores, préstamos, usuarios, y una tabla intermedia para la relación entre autores y libros.
+
+CREATE TABLE categorias (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20)
+);
+
+CREATE TABLE libros (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(50),
+    ano_publicacion INT,
+    id_categoria INT,
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id)
+);
+
+CREATE TABLE autores (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(30)
+);
+
+--tabla intermedia entre autores y libros
+CREATE TABLE autores_libros (
+    id_autor INT,
+    id_libro INT,
+    PRIMARY KEY (id_autor, id_libro),
+    FOREIGN KEY (id_autor) REFERENCES autores(id),
+    FOREIGN KEY (id_libro) REFERENCES libros(id)
+);
+
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(20),
+    email VARCHAR(30)
+);
+
+
+CREATE TABLE prestamos (
+    id SERIAL PRIMARY KEY,
+    fecha_prestamo DATE,
+    id_usuario INT,
+    id_libro INT,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+    FOREIGN KEY (id_libro) REFERENCES libros(id)
+);
